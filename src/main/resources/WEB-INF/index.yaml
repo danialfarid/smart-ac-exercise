@@ -1,0 +1,11 @@
+indexes:
+
+- kind: SensorReading
+  properties:
+  - name: serialNo
+  - name: date
+
+- kind: Notification
+  properties:
+  - name: resolved
+  - name: date
