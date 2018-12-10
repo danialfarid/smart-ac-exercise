@@ -5,7 +5,7 @@ import ToggleButton from "react-bootstrap/es/ToggleButton";
 import moment from "moment";
 import Table from "react-bootstrap/es/Table";
 import Panel from "react-bootstrap/es/Panel";
-import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+import {CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis} from 'recharts';
 
 class DeviceDetails extends React.Component {
 

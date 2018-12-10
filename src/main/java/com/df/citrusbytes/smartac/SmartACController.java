@@ -7,10 +7,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 @SpringBootApplication
 @RestController
@@ -41,10 +39,7 @@ public class SmartACController {
     public void sensorReading(@PathVariable String serialNo, @RequestBody SensorReading sensorReading) {
         assert sensorReading.serialNo == serialNo;
         sensorReading.date = new Date();
-        Date d2 = new Date();
-        Date d1 = Date.from(ZonedDateTime.now().minusMonths(2).toInstant());
-        sensorReading.date = new Date(ThreadLocalRandom.current()
-                .nextLong(d1.getTime(), d2.getTime()));
+//      sensorReading.date = randomizeDate(sensorReading);
 
         createNotifications(sensorReading);
         dataStore.save(sensorReading);
@@ -74,4 +69,11 @@ public class SmartACController {
     public static void main(String[] args) {
         SpringApplication.run(SmartACController.class, args);
     }
+
+//    private Date randomizeDate(SensorReading sensorReading) {
+//        Date d2 = new Date();
+//        Date d1 = Date.from(ZonedDateTime.now().minusMonths(2).toInstant());
+//        return new Date(ThreadLocalRandom.current()
+//                .nextLong(d1.getTime(), d2.getTime()));
+//    }
 }
