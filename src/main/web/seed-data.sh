@@ -21,5 +21,5 @@ do
    STATUS="ok"
    DATA="{\"serialNo\": \"$SERIALNO\", \"temperature\": \"$TEMP\", \"humidity\": \"$HU\", \"carbonMonoxide\":\"$MON\", \"healthStatus\":\"$STATUS\"}"
    echo $DATA
-   curl -X POST localhost:8080/ac/$SERIALNO/sensorReading -H "Content-Type: application/json" -d "$DATA"
+   curl -X POST localhost:8080/ac/$SERIALNO/sensorReading -H "Content-Type: application/json" -d "[$DATA]"
 done

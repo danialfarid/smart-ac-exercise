@@ -3,6 +3,8 @@ package com.df.citrusbytes.smartac;
 import com.df.citrusbytes.smartac.model.AC;
 import com.df.citrusbytes.smartac.model.Notification;
 import com.df.citrusbytes.smartac.model.SensorReading;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,8 @@ import java.util.List;
 
 @SpringBootApplication
 @RestController
+@Api(value = "smartAcAPI", description = "Operations pertaining to Smart AC including device registration, " +
+        "reporting and storing sensor readings, and device search.")
 public class SmartACController {
     private SmartACDataStore dataStore;
 
@@ -19,25 +23,38 @@ public class SmartACController {
         this.dataStore = dataStore;
     }
 
-    @GetMapping("/ac")
+    @ApiOperation("Get list of available AC devices. You can optionally filter by serial number.")
+    @GetMapping(value = "/ac", produces = "application/json")
     public List<AC> listACs(@RequestParam(required = false) String serialNo) {
         return dataStore.listACs(serialNo);
     }
 
-    @PostMapping("/ac")
+    @ApiOperation("Register a new AC device. Serial number must be unique.")
+    @PostMapping(value = "/ac", consumes = "application/json")
     public void register(@RequestBody AC ac) {
         ac.registerationDate = new Date();
         dataStore.save(ac);
     }
 
-    @GetMapping("/ac/{serialNo}/sensorReading")
+    @ApiOperation("Get the list of sensor reading for a given device. The device is identified by serial number. " +
+            "`endDate` request parameter is required and is in unix epoch millisecond format and indicates " +
+            "the beginning of the time the logs will be retrieved from until now.")
+    @GetMapping(value = "/ac/{serialNo}/sensorReading", produces = "application/json")
     public List<SensorReading> sensorReading(@PathVariable String serialNo, @RequestParam long endDate) {
         return dataStore.listSensorReadings(serialNo, new Date(endDate));
     }
 
-    @PostMapping("/ac/{serialNo}/sensorReading")
-    public void sensorReading(@PathVariable String serialNo, @RequestBody SensorReading sensorReading) {
-        assert sensorReading.serialNo == serialNo;
+    @ApiOperation(value = "Store the sensor readings values. The sensor readings are send as an array of size " +
+            "at least one or more.", consumes = "application/json")
+    @PostMapping(value = "/ac/{serialNo}/sensorReading", produces = "application/json")
+    public void sensorReading(@PathVariable String serialNo, @RequestBody SensorReading[] sensorReadings) {
+        assert sensorReadings.length > 0;
+        for (SensorReading reading : sensorReadings) {
+            saveSensoreReading(reading);
+        }
+    }
+
+    private void saveSensoreReading(SensorReading sensorReading) {
         sensorReading.date = new Date();
 //      sensorReading.date = randomizeDate(sensorReading);
 
@@ -45,12 +62,16 @@ public class SmartACController {
         dataStore.save(sensorReading);
     }
 
-    @GetMapping("/notifications")
+    @ApiOperation("Get the list of active (unresolved) system notification. This include the " +
+            "sensor readings with the carbon monoxide of above 9ppm or health status of " +
+            "`needs_service`, `needs_new_filter` or `gas_leak`.")
+    @GetMapping(value = "/notifications", produces = "application/json")
     public List<Notification> listNotifications() {
         return dataStore.listNotifications();
     }
 
-    @PostMapping("/notifications/{id}/resolve")
+    @ApiOperation("Mark a notification with the given ID as resolved.")
+    @PostMapping(value = "/notifications/{id}/resolve", consumes = "application/json")
     public void resolveNotification(@PathVariable long id) {
         dataStore.resolve(id);
     }

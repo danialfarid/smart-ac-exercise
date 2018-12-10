@@ -13,7 +13,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 @Configuration
-public class DataStoreInitConfig implements ServletContextListener {
+public class DataStoreConfig implements ServletContextListener {
     public void contextInitialized(ServletContextEvent event) {
         ObjectifyService.init();
         ObjectifyService.register(AC.class);
