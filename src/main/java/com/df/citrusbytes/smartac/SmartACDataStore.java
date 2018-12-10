@@ -21,7 +21,6 @@ public class SmartACDataStore {
     }
 
     public void save(SensorReading sensorReading) {
-        sensorReading.date = new Date();
         ofy().save().entity(sensorReading).now();
     }
 
@@ -37,7 +36,7 @@ public class SmartACDataStore {
         return ofy().load().type(SensorReading.class)
                 .filter("serialNo", serialNo)
                 .filter("date >", endDate)
-                .order("date").list();
+                .order("-date").list();
     }
 
     public void save(Notification notification) {
@@ -47,7 +46,7 @@ public class SmartACDataStore {
 
     public List<Notification> listNotifications() {
         return ofy().load().type(Notification.class).filter("resolved", false)
-                .order("date").list();
+                .order("-date").list();
     }
 
     public void resolve(long id) {

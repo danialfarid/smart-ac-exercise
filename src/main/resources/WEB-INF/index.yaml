@@ -4,8 +4,11 @@ indexes:
   properties:
   - name: serialNo
   - name: date
+    direction: desc
 
 - kind: Notification
   properties:
   - name: resolved
   - name: date
+    direction: desc
+

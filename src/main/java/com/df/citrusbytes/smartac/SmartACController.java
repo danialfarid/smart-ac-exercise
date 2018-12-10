@@ -7,15 +7,17 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @SpringBootApplication
 @RestController
-public class SmartACApp {
+public class SmartACController {
     private SmartACDataStore dataStore;
 
-    public SmartACApp(SmartACDataStore dataStore) {
+    public SmartACController(SmartACDataStore dataStore) {
         this.dataStore = dataStore;
     }
 
@@ -26,6 +28,7 @@ public class SmartACApp {
 
     @PostMapping("/ac")
     public void register(@RequestBody AC ac) {
+        ac.registerationDate = new Date();
         dataStore.save(ac);
     }
 
@@ -37,6 +40,12 @@ public class SmartACApp {
     @PostMapping("/ac/{serialNo}/sensorReading")
     public void sensorReading(@PathVariable String serialNo, @RequestBody SensorReading sensorReading) {
         assert sensorReading.serialNo == serialNo;
+        sensorReading.date = new Date();
+        Date d2 = new Date();
+        Date d1 = Date.from(ZonedDateTime.now().minusMonths(2).toInstant());
+        sensorReading.date = new Date(ThreadLocalRandom.current()
+                .nextLong(d1.getTime(), d2.getTime()));
+
         createNotifications(sensorReading);
         dataStore.save(sensorReading);
     }
@@ -52,7 +61,10 @@ public class SmartACApp {
     }
 
     private void createNotifications(SensorReading sensorReading) {
-        if (sensorReading.carbonMonoxide > 9) {
+        String status = sensorReading.healthStatus;
+        if (sensorReading.carbonMonoxide > 9 ||
+                "needs_service".equals(status) || "needs_new_filter".equals(status) ||
+                "gas_leak".equals(status)) {
             Notification notification = new Notification();
             notification.sensorReading = sensorReading;
             dataStore.save(notification);
@@ -60,6 +72,6 @@ public class SmartACApp {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(SmartACApp.class, args);
+        SpringApplication.run(SmartACController.class, args);
     }
 }

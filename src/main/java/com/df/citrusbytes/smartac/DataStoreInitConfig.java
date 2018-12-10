@@ -19,6 +19,8 @@ public class DataStoreInitConfig implements ServletContextListener {
         ObjectifyService.register(AC.class);
         ObjectifyService.register(SensorReading.class);
         ObjectifyService.register(Notification.class);
+        //gcloud datastore indexes create src/main/resources/WEB-INF/index.yaml
+        //gcloud beta emulators datastore start --host-port=localhost:8484
     }
 
     @Bean
