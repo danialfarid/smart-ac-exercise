@@ -26,7 +26,14 @@ class DeviceDetails extends React.Component {
 
     fetchSensorReadings(endDate) {
         Api.getSensorReadings(this.deviceId, endDate.valueOf())
-            .then(response => this.setState({sensorReadings: response.data}));
+            .then(response => {
+                let data = response.data;
+                data.forEach(reading => {
+                    reading.formattedDate = moment(reading.date).format("MM-DDTHH:mm");
+                });
+                console.log(data);
+                this.setState({sensorReadings: data});
+            });
     }
 
     dateRangeChanged(dateRange) {
@@ -64,8 +71,8 @@ class DeviceDetails extends React.Component {
                 </ToggleButtonGroup><br/>
                     <LineChart width={1000} height={400} data={this.state.sensorReadings}
                                margin={{top: 5, right: 30, left: 20, bottom: 5}}>
-                        <XAxis dataKey="date"/>
-                        <YAxis interval={100}/>
+                        <XAxis reversed={true} dataKey="formattedDate"/>
+                        <YAxis/>
                         <CartesianGrid strokeDasharray="3 3"/>
                         <Legend verticalAlign="top" height={36}/>
                         <Tooltip/>
@@ -73,8 +80,8 @@ class DeviceDetails extends React.Component {
                     </LineChart>
                     <LineChart width={1000} height={400} data={this.state.sensorReadings}
                                margin={{top: 5, right: 30, left: 20, bottom: 5}}>
-                        <XAxis dataKey="date"/>
-                        <YAxis interval={100}/>
+                        <XAxis reversed={true} dataKey="formattedDate"/>
+                        <YAxis/>
                         <CartesianGrid strokeDasharray="3 3"/>
                         <Legend verticalAlign="top" height={36}/>
                         <Tooltip/>
@@ -82,8 +89,8 @@ class DeviceDetails extends React.Component {
                     </LineChart>
                     <LineChart width={1000} height={400} data={this.state.sensorReadings}
                                margin={{top: 5, right: 30, left: 20, bottom: 5}}>
-                        <XAxis dataKey="date"/>
-                        <YAxis interval={100}/>
+                        <XAxis reversed={true} dataKey="formattedDate"/>
+                        <YAxis/>
                         <CartesianGrid strokeDasharray="3 3"/>
                         <Legend verticalAlign="top" height={36}/>
                         <Tooltip/>

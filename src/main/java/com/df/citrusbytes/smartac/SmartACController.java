@@ -9,6 +9,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -71,7 +75,7 @@ public class SmartACController {
     }
 
     @ApiOperation("Mark a notification with the given ID as resolved.")
-    @PostMapping(value = "/notifications/{id}/resolve", consumes = "application/json")
+    @PostMapping(value = "/notifications/{id}/resolve")
     public void resolveNotification(@PathVariable long id) {
         dataStore.resolve(id);
     }
@@ -87,13 +91,19 @@ public class SmartACController {
         }
     }
 
+    @ApiOperation(hidden = true, value = "redirect to homepage")
+    @GetMapping("/")
+    public void homepage(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        request.getRequestDispatcher("index.html").forward(request, response);
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(SmartACController.class, args);
     }
 
 //    private Date randomizeDate(SensorReading sensorReading) {
 //        Date d2 = new Date();
-//        Date d1 = Date.from(ZonedDateTime.now().minusMonths(2).toInstant());
+//        Date d1 = Date.from(ZonedDateTime.now().minusDays(2).toInstant());
 //        return new Date(ThreadLocalRandom.current()
 //                .nextLong(d1.getTime(), d2.getTime()));
 //    }

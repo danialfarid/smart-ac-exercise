@@ -4,7 +4,9 @@ Smart AC Portal
 The project is a proof of concept for smart AC portal.
 The backend is written in Java/Spring boot and front end in React.js.
 The demo is deployed on Google App Engine and is viewable at https://citrusbytes-smart-ac.appspot.com/
- 
+
+#### REST API
+You can see the REST API documentations here: https://citrusbytes-smart-ac.appspot.com/swagger-ui.html 
 
 #### Build
 
