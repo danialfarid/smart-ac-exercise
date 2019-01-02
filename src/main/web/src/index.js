@@ -1,28 +1,11 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter as Router, Route} from "react-router-dom";
 import './index.css';
-import Devices from "./components/Devices";
-import DeviceDetails from "./components/DeviceDetails";
-import Link from "react-router-dom/es/Link";
-import Notification from "./components/Notification";
+import 'bootstrap/dist/css/bootstrap.css';
+import { makeMainRoutes } from './routes';
 
-class App extends React.Component {
-    render() {
-        return (
-            <div>
-                <Link to=""><h1 className="header">Smart AC Portal</h1></Link>
-                <Notification/>
-                <Route path="/" exact component={Devices}/>
-                <Route path="/device/:deviceId" component={DeviceDetails}/>
-            </div>
-        );
-    }
-}
+const routes = makeMainRoutes();
 
 ReactDOM.render(
-    <Router>
-        <App />
-    </Router>,
-    document.getElementById('root')
+  routes,
+  document.getElementById('root')
 );

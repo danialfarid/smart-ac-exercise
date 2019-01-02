@@ -7,10 +7,27 @@ html body {
 
 .header {
     background-color: darkgreen;
-    color: white;
     padding: 13px 20px;
     margin: 0;
-    font-size: 24px;
+    font-size: 14px;
+}
+
+.header a, .header a:hover, .header a:active, .header a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+.header .logo {
+    font-size: 24px !important;
+}
+
+.header .login {
+    float: right;
+}
+
+.header .login .profile{
+    color: #4cc1e8;
+    margin-right: 10px;
 }
 
 .notif {

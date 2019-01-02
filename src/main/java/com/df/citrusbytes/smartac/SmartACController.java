@@ -54,11 +54,11 @@ public class SmartACController {
     public void sensorReading(@PathVariable String serialNo, @RequestBody SensorReading[] sensorReadings) {
         assert sensorReadings.length > 0;
         for (SensorReading reading : sensorReadings) {
-            saveSensoreReading(reading);
+            saveSensorReading(reading);
         }
     }
 
-    private void saveSensoreReading(SensorReading sensorReading) {
+    private void saveSensorReading(SensorReading sensorReading) {
         sensorReading.date = new Date();
 //      sensorReading.date = randomizeDate(sensorReading);
 
@@ -92,7 +92,7 @@ public class SmartACController {
     }
 
     @ApiOperation(hidden = true, value = "redirect to homepage")
-    @GetMapping("/")
+    @GetMapping({"/", "/callback"})
     public void homepage(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         request.getRequestDispatcher("index.html").forward(request, response);
     }
